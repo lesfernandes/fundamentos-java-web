@@ -2,6 +2,7 @@ package br.com.alura.gerenciador.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,25 +10,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/novaEmpresa")
-public class NovaEmpresaServlet extends HttpServlet {
+@WebServlet("/listaEmpresas")
+public class ListaEmpresasServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Cadastrando nova empresa.");
-		
-		String nomeEmpresa = request.getParameter("nome");
-		Empresa empresa = new Empresa();
-		empresa.setNome(nomeEmpresa);
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Banco banco = new Banco();
-		banco.adiciona(empresa);
+		List<Empresa> empresas = banco.getEmpresas();
 		
 		PrintWriter out = response.getWriter();
-		
 		out.println("<html>");
 		out.println("<body>");
-		out.println("Empresa " + empresa.getNome() + " cadastrada com sucesso!");
+		out.println("<ul>");
+		for (Empresa empresa : empresas) {
+			out.println("<li>");
+			out.println(empresa.getNome());
+			out.println("</li>");
+		}
+		out.println("</ul>");
 		out.println("</body>");
 		out.println("</html>");
 	}
